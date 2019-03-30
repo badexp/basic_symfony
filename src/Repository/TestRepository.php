@@ -19,6 +19,17 @@ class TestRepository extends ServiceEntityRepository
         parent::__construct($registry, Test::class);
     }
 
+    public function getRandom(): ?Test
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.random < :rand')
+            ->setParameter('rand', random_int(PHP_INT_MIN, PHP_INT_MAX))
+            ->orderBy('t.random', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Test[] Returns an array of Test objects
     //  */

@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Repository\TestRepository;
 use App\Services\GitHubService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TestController extends AbstractController
@@ -25,5 +27,22 @@ class TestController extends AbstractController
         $data = $item->get();
 
         return new Response($data);
+    }
+
+    /**
+     * @Route("/get_random_test", name="get_random_test")
+     */
+    public function getRandomTest(TestRepository $testRepository)
+    {
+        $item = $testRepository->getRandom();
+        if($item === null)
+        {
+            throw new NotFoundHttpException();
+        }
+        return $this->json([
+            'id' => $item->getId(),
+            'title' => $item->getTitle(),
+            'weight' => $item->getWeight(),
+        ]);
     }
 }
