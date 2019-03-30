@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\GitHubService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,13 +13,12 @@ class TestController extends AbstractController
     /**
      * @Route("/get_some_data/{cacheTime}", name="get_some_data")
      */
-    public function getSomeData(int $cacheTime, AdapterInterface $cache): Response
+    public function getSomeData(int $cacheTime, AdapterInterface $cache, GitHubService $github): Response
     {
         $item = $cache->getItem('some_data');
         if(!$item->isHit())
         {
-            // TODO: retrieve some_data from real service
-            $item->set('');
+            $item->set($github->getPublicGists());
             $item->expiresAfter($cacheTime);
             $cache->save($item);
         }
