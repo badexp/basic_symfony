@@ -51,7 +51,7 @@
         "run": [
             "composer install",
             "docker-compose build",
-            "docker-compose up -d",
+            "docker-compose up -d && sleep 30",
             "docker-compose exec -T php-fpm bin/console doctrine:migrations:migrate",
             "docker-compose exec -T php-fpm bin/console doctrine:fixtures:load"
         ]
