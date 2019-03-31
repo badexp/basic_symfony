@@ -47,6 +47,13 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "run": [
+            "composer install",
+            "docker-compose build",
+            "docker-compose up -d",
+            "docker-compose exec -T php-fpm bin/console doctrine:migrations:migrate",
+            "docker-compose exec -T php-fpm bin/console doctrine:fixtures:load"
         ]
     },
     "conflict": {
